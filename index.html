@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Post to server</title>
+        <style>
+            html {
+                background: #333;
+            }
+            body {
+                text-align: center;
+            }
+            .credentials {
+                padding: 15px 0;
+            }
+            .inputs {
+                padding: 5px;
+                color: red;
+    width: fit-content;
+    margin: auto;
+            }
+            .inputs input {
+                width: 180px;
+                height: 20px;
+                padding: 3px;
+                border: none;
+                outline: none;
+                border-bottom: 1px solid #e4007c;
+                background: #333;
+                font-size: 14px;
+                color: #f7f7f7;
+            }
+            ::placeholder {
+                color: #f7f7f7;
+            }
+            h2 {
+                color: aquamarine;
+            }
+            button {
+                margin-top: 10px;
+                width: 180px;
+                height: 30px;
+                padding: 8px;
+                display: inline-block;
+                color: #e4007c;
+                background: #333;
+                border: 1px solid #e4007c;
+                cursor: pointer;
+                outline: none;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <h2>This html come from the server</h2>
+
+        <div class="center">
+            <h1 style="color: green">הגדל טקסט</h1>
+            <button type="button" 
+                onclick="changeSizeByBtn('20px')" name="btn1">
+                -A
+            </button>
+              
+            <button type="button" 
+                onclick="changeSizeByBtn('25px')" name="btn2">
+                A
+            </button>
+      
+            <button type="button" onclick="changeSizeByBtn('30px')"
+                name="btn3">
+                A+
+            </button>
+            <br /><br />
+            <div style="padding: 20px; margin: 50px;
+            font-size: 20px; " 
+            id="container" class="container">
+            <div>
+                <button onclick="window.location.href='http://localhost:3000/contactAdmin';">Admin page</button>
+                <button onclick="window.location.href='http://localhost:3000/';">User page</button>
+            </div>
+      
+
+                  
+                <p>
+אנא מלא פרטים אישיים וניצור איתך קשר בהקדם:)
+                </p>
+            
+      
+            <input type="range" min="10" max="40" id="slider"
+                onchange="changeSizeBySlider()" value="20" />
+        </div>
+
+        <div class="credentials">
+            <form id="credentials">
+        
+                <div class="inputs name">
+
+                    <input
+                        id="name"
+                        type="text"
+                        placeholder="name..."
+                        name="name"
+                        required
+                    />
+                </div>
+
+                <div class="inputs email">
+                    <input
+                    id="email"
+                        type="email"
+                        placeholder="email..."
+                        name="email"
+                        required
+                    />
+                </div>
+                
+                <div class="inputs tel">
+                    <input
+                        id="tel"
+                        type="tel"
+                        placeholder="tel..."
+                        name="tel"
+                    />
+                </div>
+
+                <div class="messege">
+                <p><label for="w3review">messege:</label></p>
+                <textarea id="messege" name="messege" rows="4" cols="50" required>write your messege.</textarea>
+                </div>
+
+                <br>
+            </form>
+            <div><button type="button" id="button1">Send</button></div>
+        </div>
+    </div>
+
+        <script>
+
+
+async function  getObj() {
+               var theFetch = await fetch('http://localhost:3000/login2', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                })
+                    .then((response) => {
+                        console.log("response: " ,response);
+                        return response.json()
+                    })
+                    console.log("theFetch: " ,theFetch);
+                    return theFetch;        
+            }
+
+
+
+
+
+            var cont = document.getElementById("container");
+            console.log("cont: " ,cont);
+            console.log("cont.style.fontSize: " ,cont.style.fontSize);
+            cont.style.fontSize = "35px";
+            function changeSizeByBtn(size) {
+
+                cont.style.fontSize = size;
+            }
+
+            function changeSizeBySlider() {
+                var slider = document.getElementById("slider");
+                console.log("slider value: ",slider.value);
+
+                cont.style.fontSize = slider.value + "px";
+            }
+
+
+            const tel = document.getElementById("tel")
+            tel.addEventListener('mouseover', function() {
+            const note = document.querySelector('.tel');
+            note.style.backgroundColor = 'yellow';
+            note.style.color = 'red';
+            tel.focus()});
+
+            tel.addEventListener('mouseleave', function() {
+            const note = document.querySelector('.tel');
+            note.style.backgroundColor = '';
+            note.style.color = '';});
+
+
+            const email = document.getElementById("email")
+            email.addEventListener('mouseover', function() {
+            const note = document.querySelector('.email');
+            note.style.backgroundColor = 'yellow';
+            note.style.color = 'red';
+            email.focus()});
+
+            email.addEventListener('mouseleave', function() {
+            const note = document.querySelector('.email');
+            note.style.backgroundColor = '';
+            note.style.color = '';});
+
+
+            const name = document.getElementById("name")
+            name.addEventListener('mouseover', function() {
+            const note = document.querySelector('.name');
+            note.style.backgroundColor = 'yellow';
+            note.style.color = 'red';
+            name.focus()});
+            name.addEventListener('mouseleave', function() {
+            const note = document.querySelector('.name');
+            note.style.backgroundColor = '';
+            note.style.color = '';});
+            
+            const messege = document.getElementById("messege")
+            messege.addEventListener('mouseover', function() {
+            const note = document.querySelector('.messege');
+            note.style.backgroundColor = 'yellow';
+            note.style.color = 'red';
+            messege.focus()});
+            messege.addEventListener('mouseleave', function() {
+            const note = document.querySelector('.messege');
+            note.style.backgroundColor = '';
+            note.style.color = '';});
+
+            const buttonRef = document.getElementById("button1")
+            console.log(buttonRef);
+            const credentialsRef = document.querySelector('#credentials')
+            buttonRef.addEventListener('click',async () => {
+                console.log("buttonRef");
+                const name = credentialsRef.elements['name'].value
+                if(name ==""){alert("Name must be filled out");return false;}
+                const email = credentialsRef.elements['email'].value
+                if(email ==""){alert("email must be filled out");return false;}
+                const tel = credentialsRef.elements['tel'].value
+                if(tel ==""){alert("tel must be filled out");return false;}
+                const messege = credentialsRef.elements['messege'].value
+                if(messege ==""){alert("messege must be filled out");return false;}
+                const sendingTime = new Date();
+                let checked = false;
+                let adminMessege = "false";
+
+                const objArr =await test2();
+                const element22 = objArr.filter((element) => element.email === email)[0];
+
+                console.log("element22:" ,element22);
+                if (element22) {
+                    alert("email already exist")
+                }else{
+                    
+                confirm(" name "+ name + " email: " + email + " tel: " + tel + " messege: " + messege +"Are you sure you entered the correct details?");
+                getObj2({ name, email,tel,messege,sendingTime,checked })
+                window.location.href='http://localhost:3000/thenku';
+
+                }
+            })
+            const test2 = async ()=>{ 
+                const test = await getObj();
+                console.log("test4: " ,test);
+            if (test) {
+                const jsTest1 = JSON.parse(test);
+                console.log("jsTest: " ,jsTest1);
+                return jsTest1;
+            }
+        }
+
+
+
+
+            async function  getObj2(credentials) {
+               var theFetch = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    body: JSON.stringify(credentials),
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                })
+                    .then((response) => {
+                        console.log("response: " ,response);
+                        return response.json()
+                    })
+                    console.log("theFetch: " ,theFetch);
+                    return theFetch;        
+            }
+
+
+        </script>
+    </body>
+</html>

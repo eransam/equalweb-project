@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Post to server</title>
+        <style>
+            html {
+                background: rgb(147, 147, 147);
+            }
+            body {
+                text-align: center;
+            }
+            .credentials {
+                padding: 200px 0;
+            }
+            .inputs {
+                padding: 5px;
+            }
+            .inputs input {
+                width: 180px;
+                height: 20px;
+                padding: 3px;
+                border: none;
+                outline: none;
+                border-bottom: 1px solid #e4007c;
+                background: #333;
+                font-size: 14px;
+                color: #f7f7f7;
+            }
+            ::placeholder {
+                color: #f7f7f7;
+            }
+            h2 {
+                color: aquamarine;
+            }
+            button {
+                margin-top: 10px;
+                width: 180px;
+                height: 30px;
+                padding: 8px;
+                display: inline-block;
+                color: #e4007c;
+                background: #333;
+                border: 1px solid #e4007c;
+                cursor: pointer;
+                outline: none;
+            }
+            .userCard{
+                background: #333;
+                color: #e4007c;
+                border: 1px solid #9afc58;
+                padding: 5px;
+                width: 500px;
+                margin: auto;
+            }
+            .disNone{
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="credentials">
+            <div>
+                <button onclick="window.location.href='http://localhost:3000/contactAdmin';">Admin page</button>
+                <button onclick="window.location.href='http://localhost:3000/';">User page</button>
+            </div>
+            <div id="main">
+                <button type="button" id="buttonLids">view the lids</button></div>
+        </div>
+        <script>
+            var eranarr=""
+            const buttonRef = document.getElementById('buttonLids')
+            
+            const test2 = async ()=>{ 
+                const test = await getObj2();
+            if (test) {
+                const jsTest1 = JSON.parse(test);
+                return jsTest1;
+            }
+        }
+
+            buttonRef.addEventListener('click',async () => {
+                const jsTest = await test2();
+                console.log("jsTest222:" ,jsTest);
+                const thediv = document.getElementById('main')
+                    console.log("jsTest: " ,jsTest);
+                    jsTest.forEach(element => {
+                        console.log(element.name);
+                        thediv.innerHTML +=`
+                        </br></br></br>
+                        <div class="userCard">
+                            <p>tel: ${element.name}</p>
+                            <p>email: ${element.email}</p>
+                            <p>tel: ${element.tel}</p>
+                            <p>messege: ${element.messege}</p>
+                            <p>sending Time: ${element.sendingTime}</p>
+                        </div>`
+
+                        if (element.checked && element.adminMessege){
+                                    thediv.innerHTML +=
+                                `
+                                <div class="userCard">
+                                    <h2>טופל</h2>
+                                    <p>admin Messege: ${element.adminMessege}</p>
+                                </div>`
+                                }else{
+                                if (element.checked) {
+                                thediv.innerHTML +=
+                                `
+                                <div class="userCard">
+                                    <form  onsubmit="adminMessege(this)">
+                                        <h2>טופל</h2>
+                                        <div class="disNone">
+                                        <input onclick="toggle(this)" name="theInput" id="${element.email}" type="checkbox" class=""/>טופל:.disabled;
+                                        </div>
+                                        <textarea name="theTextarea" id="" cols="30" rows="10"></textarea></br></br>
+                                        <button>שמור </button>
+                                    </form>
+                                </div>
+                                </br></br></br>
+                                `
+                            }else{
+                            if (element.adminMessege) {
+                                    thediv.innerHTML +=
+                                `
+                                <div class="userCard">
+                                <form  onsubmit="adminMessege(this)">
+                                    <input onclick="toggle(this)" name="theInput" id="${element.email}" type="checkbox" class=""/>טופל:
+                                    <p>admin Messege: ${element.adminMessege}</p>
+                                    <button>שמור</button>
+                                </form>
+                                </div>
+                                `  
+                                }
+                                else{
+                                    thediv.innerHTML +=`
+                                <form  onsubmit="adminMessege(this)">
+                                <div class="userCard">
+                                <input onclick="toggle(this)" name="theInput" id="${element.email}" type="checkbox" class=""/>טופל:
+                                </br></br></br>
+                                <textarea name="theTextarea" id="" cols="30" rows="10"></textarea></br></br>
+                                <button>שמור </button>
+                                </form>
+                                </br></br></br>
+                                </div>
+                                </br></br></br>`
+                                }
+                            }
+                        }            
+                });
+            })
+
+    var toggle =async function (toggler) {
+        const jsTest = await test2();
+        const element1 = jsTest.filter((element) => element.email === toggler.id)[0];
+	    element1.checked = !element1.checked;
+        console.log("element1 after change: " ,element1);
+        var indexObj123 = jsTest.findIndex(object => {
+        return object.email === element1.email;
+        });
+        jsTest[indexObj123]=element1;
+        getObj(jsTest);
+        window.location.href='http://localhost:3000/contactAdmin';
+        };
+
+
+        var adminMessege =async function (tog) {
+        event.preventDefault();
+        const jsTest2 = await test2();
+        console.log("the this is:",tog);
+
+        const adminMessege = tog.elements['theTextarea'].value;
+        const inp = tog.elements['theInput'];
+        console.log("inp: " ,inp.id);
+
+        const element2 = jsTest2.filter((element) => element.email === inp.id)[0];
+        console.log("element1 befure change: " ,element2);
+
+        element2.adminMessege = adminMessege;
+        var indexObj1234 = jsTest2.findIndex(object => {
+        return object.email === element2.email;
+        });
+        console.log("element2: " ,element2);
+        jsTest2[indexObj1234] = element2;
+        getObj(jsTest2);
+        window.location.href='http://localhost:3000/contactAdmin';
+
+        };
+
+
+
+function getObj(credentials) {
+                fetch('http://localhost:3000/check', {
+                    method: 'POST',
+                    body: JSON.stringify(credentials),
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                })
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then((data) => {
+                        console.log(data)
+                    })
+            }
+
+
+
+
+           async function  getObj2() {
+               var theFetch = await fetch('http://localhost:3000/login2', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                })
+                    .then((response) => {
+                        console.log("response: " ,response);
+                        return response.json()
+                    })
+                    console.log("theFetch: " ,theFetch);
+                    return theFetch;        
+            }
+        </script>
+    </body>
+</html>
